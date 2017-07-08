@@ -1,7 +1,7 @@
-import git
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
+from subprocess import call
 import seaborn as sns
 
 # Tunables
@@ -19,10 +19,12 @@ ax.set_yticklabels(np.arange(-board_size/2. + 0.5, board_size/2. + 0.5))
 
 # get board
 #===================================#
-# game_id = raw_input('game name? ')
+# gameID = raw_input('game name? ')
+gameID='test'
 
+call(['git', 'pull'])
 try:
-    board_states = list(np.load(game_id + '.npy'))
+    board_states = list(np.load(gameID + '.npy'))
 except IOError:
     board_states = [np.zeros((board_size, board_size), dtype=int)]    
 ax.imshow(board_states[-1], origin='lower')
@@ -40,4 +42,10 @@ ax.imshow(board_states[-1], origin='lower')
 plt.show()
 
 #end turn, save board states
-np.save(game_id, board_states)
+np.save(gameID, board_states)
+
+
+call(['git', 'add', '{}.npy'.format(gameID)])
+call(['git', 'commit', "-m'gameID_{}''".format(gameID)])
+call(['git', 'status'])
+call(['git', 'push'])
